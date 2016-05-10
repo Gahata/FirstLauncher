@@ -1,8 +1,10 @@
 package org.example.paweljezierski.firstlauncher;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,8 +18,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,15 +30,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
+ //       implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         loadApps();
         loadListView();
@@ -48,18 +53,19 @@ public class MainActivity extends AppCompatActivity
 //            }
 //        });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawer.setDrawerListener(toggle);
+//        toggle.syncState();
+//
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private PackageManager manager;
     private List<AppDetail> apps;
+
     private void loadApps() {
         manager = getPackageManager();
         apps = new ArrayList<AppDetail>();
@@ -70,31 +76,32 @@ public class MainActivity extends AppCompatActivity
         List<ResolveInfo> availableActivities = manager.queryIntentActivities(i, 0);
         for (ResolveInfo ri : availableActivities) {
             AppDetail app = new AppDetail();
-//            app.label = ri.loadLabel(manager);
+            app.label = ri.loadLabel(manager);
             app.name = ri.activityInfo.packageName;
             app.icon = ri.activityInfo.loadIcon(manager);
             apps.add(app);
         }
     }
 
-    private ListView list;
-    private void loadListView(){
-        list = (ListView)findViewById(R.id.apps_list);
+    private GridView grid;
+
+    private void loadListView() {
+        grid = (GridView) findViewById(R.id.appGrid);
 
         ArrayAdapter<AppDetail> adapter = new ArrayAdapter<AppDetail>(this,
                 R.layout.list_item, apps) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                if(convertView == null){
+                if (convertView == null) {
                     convertView = getLayoutInflater().inflate(R.layout.list_item, null);
                 }
 
-                ImageView appIcon = (ImageView)convertView.findViewById(R.id.item_app_icon);
+                ImageView appIcon = (ImageView) convertView.findViewById(R.id.item_app_icon);
                 appIcon.setImageDrawable(apps.get(position).icon);
 
-//                TextView appLabel = (TextView)convertView.findViewById(R.id.item_app_label);
-//                appLabel.setText(apps.get(position).label);
-//
+                TextView appLabel = (TextView) convertView.findViewById(R.id.item_app_label);
+                appLabel.setText(apps.get(position).label);
+
 //                TextView appName = (TextView)convertView.findViewById(R.id.item_app_name);
 //                appName.setText(apps.get(position).name);
 
@@ -102,11 +109,11 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        list.setAdapter(adapter);
+        grid.setAdapter(adapter);
     }
 
-    private void addClickListener(){
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    private void addClickListener() {
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int pos,
                                     long id) {
@@ -149,28 +156,30 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+//        @SuppressWarnings("StatementWithEmptyBody")
+//    @Override
+//    public boolean onNavigationItemSelected(MenuItem item) {
+//        // Handle navigation view item clicks here.
+//        int id = item.getItemId();
+//
+//        if (id == R.id.nav_camera) {
+//            // Handle the camera action
+//        } else if (id == R.id.nav_gallery) {
+//
+//        } else if (id == R.id.nav_slideshow) {
+//
+//        } else if (id == R.id.nav_manage) {
+//
+//        } else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
+//
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        drawer.closeDrawer(GravityCompat.START);
+//        return true;
+//    }
 }
+
+

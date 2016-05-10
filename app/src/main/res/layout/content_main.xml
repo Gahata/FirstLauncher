@@ -4,23 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="org.example.paweljezierski.firstlauncher.MainActivity"
     tools:showIn="@layout/app_bar_main">
+    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
 
-    <!--<GridView-->
-        <!--android:id="@+id/appGrid"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-
-    <!--</GridView>-->
-
-    <ListView
-        android:id="@+id/apps_list"
+    <GridView
+        android:id="@+id/appGrid"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:columnWidth="75dp"
+        android:numColumns="6"
+        android:verticalSpacing="20dp"
+        android:horizontalSpacing="20dp"
+        android:stretchMode="none"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal">
+    </GridView>
 
-    </ListView>
+    <!--android:clipToPadding="false"-->
 
 </LinearLayout>
 
