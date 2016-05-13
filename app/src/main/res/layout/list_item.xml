@@ -4,14 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<ImageView-->
-        <!--android:id="@+id/item_app_icon"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--/>-->
-
     <org.example.paweljezierski.firstlauncher.SquareImageView
         android:id="@+id/item_app_icon"
         android:layout_width="match_parent"
