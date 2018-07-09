@@ -1,34 +1,23 @@
 package org.example.paweljezierski.firstlauncher;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.Display;
 import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,31 +27,44 @@ public class MainActivity extends AppCompatActivity {
 
     private PackageManager manager;
     private List<AppDetail> apps;
+    private GridView grid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
 
-        Window window = getWindow();
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);*/
+
+        setStatusBarTranslucent(true);
+
+        /*Window window = getWindow();
         window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);*/
 
         loadApps();
         loadListView();
         addClickListener();
-        setColumnWidth();
+        //setColumnWidth();
 
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
-//
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);*/
+    }
+
+    protected void setStatusBarTranslucent(boolean makeTranslucent) {
+        if (makeTranslucent) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
     }
 
     private void loadApps() {
@@ -82,26 +84,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private GridView grid;
-
     private void loadListView() {
         grid = findViewById(R.id.appGrid);
+        System.out.println(grid.getPaddingLeft() + " " + grid.getPaddingRight() + " " + grid.getHorizontalSpacing());
 
-        ArrayAdapter<AppDetail> adapter = new ArrayAdapter<AppDetail>(this,
-                R.layout.list_item, apps) {
+        ArrayAdapter<AppDetail> adapter = new ArrayAdapter<AppDetail>(this, R.layout.list_item, apps) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 if (convertView == null)
-                    convertView = getLayoutInflater().inflate(R.layout.list_item, null);
+                    convertView = getLayoutInflater().inflate(R.layout.list_item,  null);
 
                 ImageView appIcon = convertView.findViewById(R.id.item_app_icon);
                 appIcon.setImageDrawable(apps.get(position).icon);
 
                 TextView appLabel = convertView.findViewById(R.id.item_app_label);
                 appLabel.setText(apps.get(position).label);
-
-//                TextView appName = (TextView)convertView.findViewById(R.id.item_app_name);
-//                appName.setText(apps.get(position).name);
 
                 return convertView;
             }
@@ -122,14 +119,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setColumnWidth() {
-        ViewGroup.LayoutParams params = grid.getLayoutParams();
-        int margin = ((LinearLayout.LayoutParams) params).leftMargin;
         Point screenSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(screenSize);
         int screenWidth = screenSize.x;
-        int paddingsWidthSum = dpToPx(grid.getPaddingLeft()) + dpToPx(grid.getPaddingRight()) + dpToPx(grid.getHorizontalSpacing()) * 4;
-        //int marginsWidthSum = dpToPx(margin) * 2 + dpToPx(grid.getHorizontalSpacing()) * 4;
+        int paddingsWidthSum = grid.getPaddingLeft() + grid.getPaddingRight() + grid.getHorizontalSpacing() * 4;
+        System.out.println(grid.getPaddingLeft() + " " + grid.getPaddingRight() + " " + grid.getHorizontalSpacing());
         int columnWidth = (screenWidth - paddingsWidthSum) / 5;
+        System.out.println(screenWidth + " " + paddingsWidthSum + " " + columnWidth);
         grid.setColumnWidth(columnWidth);
     }
 
@@ -137,13 +133,17 @@ public class MainActivity extends AppCompatActivity {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 
+    public static int pxToDp(int px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
-        else
-            super.onBackPressed();
+        /*else
+            super.onBackPressed();*/
     }
 
     @Override
@@ -188,5 +188,3 @@ public class MainActivity extends AppCompatActivity {
 //        return true;
 //    }
 }
-
-
