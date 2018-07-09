@@ -5,7 +5,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,15 +32,17 @@ public class MainActivity extends AppCompatActivity {
     private List<AppDetail> apps;
     private GridView grid;
 
+    int statusBarHeight;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        statusBarHeight = getStatusBarHeight();
+
         /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);*/
-
-        setStatusBarTranslucent(true);
 
         /*Window window = getWindow();
         window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -47,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         loadApps();
         loadListView();
         addClickListener();
+        setStatusBarTranslucent(true);
+
         //setColumnWidth();
 
         /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -59,12 +66,23 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(this);*/
     }
 
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0)
+            result = getResources().getDimensionPixelSize(resourceId);
+        return result;
+
+    }
+
     protected void setStatusBarTranslucent(boolean makeTranslucent) {
-        if (makeTranslucent) {
+
+        grid.setPadding(0, makeTranslucent ? statusBarHeight+16 : 16, 0, 0);
+
+        if (makeTranslucent)
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        } else {
+        else
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
     }
 
     private void loadApps() {
