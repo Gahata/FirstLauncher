@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         loadApps();
         loadListView();
         addClickListener();
+        addLongClickListener();
         setStatusBarTranslucent(true);
         //grid.setPadding(dpToPx(16),dpToPx(statusBarHeight+16),dpToPx(16),dpToPx(navigationBarHeight+16));
 
@@ -120,24 +122,14 @@ public class MainActivity extends AppCompatActivity {
                 appIcon.setScaleX((float)0.75);
                 appIcon.setScaleY((float)0.75);
 
-
-
                 TextView appLabel = convertView.findViewById(R.id.item_app_label);
                 appLabel.setText(apps.get(position).label);
 
-              /*  if (position == 0) {
-                    convertView.setPadding(0,56,0,0);
-                } else if (position == apps.size()-1) {
-                    convertView.setPadding(0,0,0,80);
-                }
-*/
                 return convertView;
             }
         };
-
-
-
-        grid.setAdapter(adapter); }
+        grid.setAdapter(adapter);
+    }
 
     private void addClickListener() {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -146,6 +138,16 @@ public class MainActivity extends AppCompatActivity {
                                     long id) {
                 Intent i = manager.getLaunchIntentForPackage(apps.get(pos).name.toString());
                 MainActivity.this.startActivity(i);
+            }
+        });
+    }
+
+    private void addLongClickListener() {
+        grid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int position, long arg3) {
+                Toast.makeText(MainActivity.this,"Long press",Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
     }
@@ -208,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_manage) {
 
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
