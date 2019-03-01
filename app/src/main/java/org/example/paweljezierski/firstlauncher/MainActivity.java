@@ -7,8 +7,6 @@ import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -34,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private GridView grid;
 
     int statusBarHeight;
+    int navigationBarHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         statusBarHeight = getStatusBarHeight();
-
-       /* Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);*/
+        navigationBarHeight = getNavigationBarHeight();
 
         Window window = getWindow();
         window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -54,10 +51,11 @@ public class MainActivity extends AppCompatActivity {
         loadListView();
         addClickListener();
         setStatusBarTranslucent(true);
+        //grid.setPadding(dpToPx(16),dpToPx(statusBarHeight+16),dpToPx(16),dpToPx(navigationBarHeight+16));
 
         //setColumnWidth();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -67,17 +65,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int getStatusBarHeight() {
-        int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0)
-            result = getResources().getDimensionPixelSize(resourceId);
-        return result;
+            return getResources().getDimensionPixelSize(resourceId);
+        return 0;
+    }
 
+    private int getNavigationBarHeight() {
+        int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0)
+            return getResources().getDimensionPixelSize(resourceId);
+        return 0;
     }
 
     protected void setStatusBarTranslucent(boolean makeTranslucent) {
 
-        grid.setPadding(0, makeTranslucent ? statusBarHeight+16 : 16, 0, 0);
+        grid.setPadding(dpToPx(16), makeTranslucent ? statusBarHeight + dpToPx(16) : dpToPx(16), dpToPx(16), navigationBarHeight+dpToPx(16));
 
         if (makeTranslucent)
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -104,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadListView() {
         grid = findViewById(R.id.appGrid);
-        System.out.println(grid.getPaddingLeft() + " " + grid.getPaddingRight() + " " + grid.getHorizontalSpacing());
+        //System.out.println(grid.getPaddingLeft() + " " + grid.getPaddingRight() + " " + grid.getHorizontalSpacing());
 
         ArrayAdapter<AppDetail> adapter = new ArrayAdapter<AppDetail>(this, R.layout.list_item, apps) {
             @Override
@@ -114,16 +117,27 @@ public class MainActivity extends AppCompatActivity {
 
                 ImageView appIcon = convertView.findViewById(R.id.item_app_icon);
                 appIcon.setImageDrawable(apps.get(position).icon);
+                appIcon.setScaleX((float)0.75);
+                appIcon.setScaleY((float)0.75);
+
+
 
                 TextView appLabel = convertView.findViewById(R.id.item_app_label);
                 appLabel.setText(apps.get(position).label);
 
+              /*  if (position == 0) {
+                    convertView.setPadding(0,56,0,0);
+                } else if (position == apps.size()-1) {
+                    convertView.setPadding(0,0,0,80);
+                }
+*/
                 return convertView;
             }
         };
 
-        grid.setAdapter(adapter);
-    }
+
+
+        grid.setAdapter(adapter); }
 
     private void addClickListener() {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -3,24 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.example.paweljezierski.firstlauncher.MainActivity"
-    android:fitsSystemWindows="false"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp">
+    tools:context="org.example.paweljezierski.firstlauncher.MainActivity">
 
     <GridView
         android:id="@+id/appGrid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:columnWidth="0dp"
-        android:numColumns="5"
+        android:numColumns="4"
         android:verticalSpacing="16dp"
         android:horizontalSpacing="16dp"
         android:stretchMode="columnWidth"
         android:gravity="center_horizontal"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay">
     </GridView>
 
 </LinearLayout>
